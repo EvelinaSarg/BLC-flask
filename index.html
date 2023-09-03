@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Broken link Detector</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container w-50">
+      <h2 class="text-center my-4">Broken Link Checker</h2>
+      <form id="form" class="bg-light p-3 rounded" action="/" method="post">
+        <div class="form-group">
+          <div class="mb-3">
+            <label for="url">URL:</label>
+            <input
+              type="url"
+              class="form-control"
+              id="url"
+              placeholder="Enter URL"
+              name="url"
+              required
+            />
+          </div>
+          <div class="mb-3 mt-3">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              placeholder="Enter your email"
+              name="email"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="mb-3">
+            <label for="pages">Max Number Of Pages:</label>
+            <input
+              type="number"
+              class="form-group"
+              id="pages"
+              placeholder=""
+              name="pages"
+              value="100"
+              min="1"
+              max="1000"
+              oninput="updateValueIfExceedMax('pages', 1000)"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="The maximum number of pages to crawl at same time."
+            />
+          </div>
+          <div class="mb-3">
+            <label for="timeout">Timeout(sec):</label>
+            <input
+              type="number"
+              class="form-group"
+              id="timeout"
+              placeholder=""
+              name="timeout"
+              value="60"
+              min="1"
+              max="300"
+              oninput="updateValueIfExceedMax('timeout', 300)"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="The duration after which a job will be terminated"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="depth">Max Depth:</label>
+            <input
+              type="number"
+              class="form-group"
+              id="depth"
+              placeholder=""
+              name="depth"
+              value="1"
+              min="1"
+              max="10"
+              oninput="updateValueIfExceedMax('depth', 10)"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="The maximum depth of link exploration"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="concurrent">Number of Concurrent Requests:</label>
+            <input
+              type="number"
+              class="form-group"
+              id="concurrent"
+              placeholder=""
+              name="concurrent"
+              value="3"
+              min="1"
+              max="16"
+              oninput="updateValueIfExceedMax('concurrent', 16)"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="The maximum number of requests that can run simultaneously."
+            />
+          </div>
+
+          <div>
+            <p>Crawling Strategy:</p>
+            <div class="d-inline-block">
+              <input
+                type="radio"
+                id="DFS"
+                name="search_type"
+                value="DFS"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Deep crawl: scans every accessible link on a website"
+                checked
+              />
+              <label for="DFS">DFS</label>
+            </div>
+            <div class="d-inline-block">
+              <input
+                type="radio"
+                id="BFS"
+                name="search_type"
+                value="BFS"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Shallow crawl: scans just the top-level pages of a web"
+              />
+              <label for="BFS">BFS</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="images"
+              name="images"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Enable to report images that failed to load properly"
+              checked
+            />
+            <label class="form-check-label" for="images"
+              >Report Broken Images</label
+            >
+          </div>
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="fragments"
+              name="fragments"
+              data-toggle="tooltip"
+              data-placement="top"
+              title=" Enable to identify fragment links that are invalid or broken"
+              checked
+            />
+            <label class="form-check-label" for="fragments"
+              >Report Broken Fragments</label
+            >
+          </div>
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="status"
+              name="status"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Enable to report links with 200 status code"
+              unchecked
+            />
+            <label class="form-check-label" for="status"
+              >Report non-broken links</label
+            >
+          </div>
+
+          <!--add checkbox follow redirects-->
+          <div class="form-check mb-3">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="redirects"
+              name="redirects"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Enable to follow link paths through redirects"
+              checked
+            />
+            <label class="form-check-label" for="redirects"
+              >Follow Redirects</label
+            >
+          </div>
+        </div>
+        <!--btn-block if Large button is needed-->
+        <!---->
+        <br />
+        <button type="submit" class="btn btn-success">
+          Check Broken Links
+        </button>
+      </form>
+    </div>
+    <script>
+      function updateValueIfExceedMax(inputId, maxValue) {
+        var inputElement = document.getElementById(inputId);
+        var currentValue = parseInt(inputElement.value, 10);
+
+        if (currentValue > maxValue) {
+          inputElement.value = maxValue;
+        }
+      }
+    </script>
+    <!--when submit button is pressed I want to reset the form-->
+    <!--<script>
+      $("#form").submit(function () {
+        $(this).trigger("reset");
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    </script-->
+    <script>
+      $(document).ready(function () {
+        // Initialize Select2 for the dropdow
+        $("#search_type").select2();
+      });
+    </script>
+  </body>
+</html>
