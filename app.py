@@ -38,7 +38,7 @@ def startJob():
     app.logger.info(data)
     job_args = {
         'url': data['url'],
-        'check_images': data['images']=='on',
+        'check_images': data.get('images')=='on',
         'check_fragments': data.get('fragments')=='on',
         'report_path': f'{generate_random_string(10)}',
         'email': data['email']
