@@ -31,8 +31,9 @@ def success():
 @app.route('/', methods=['POST'])
 def startJob():
     apiKey = os.environ['zytecloud_apikey']
+    projectID = os.environ['zytecloud_project']
     client = ScrapinghubClient(apiKey)
-    project = client.get_project(664878)
+    project = client.get_project(int(projectID))
     data = request.form
     app.logger.info(data)
     job_args = {
