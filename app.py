@@ -1,5 +1,6 @@
 
 import random
+import os
 import string   
 import logging
 from flask import Flask, send_file, request, redirect, render_template
@@ -29,7 +30,7 @@ def success():
 
 @app.route('/', methods=['POST'])
 def startJob():
-    apiKey = 'd4f6b6b9d7cb420d82870f6b2115def5'
+    apiKey = os.environ['zytecloud_apikey']
     client = ScrapinghubClient(apiKey)
     project = client.get_project(664878)
     data = request.form
