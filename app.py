@@ -49,11 +49,14 @@ def startJob():
         'DEPTH_LIMIT': data['depth'],
         'ENABLE_STATUS_PIPELINE': data.get('status') != 'on',
         'LOG_LEVEL': 'DEBUG',
-        'DEPTH_PRIORITY': 0 if data['search_type']=='BFS' else 1,
+        #'DEPTH_PRIORITY': 1 if data['search_type']=='BFS' else -1,
+        'SCHEDULER_DISK_QUEUE': 'scrapy.squeues.PickleFifoDiskQueue' if data['search_type']=='BFS' else 'scrapy.squeues.PickleLifoDiskQueue',
+        'SCHEDULER_MEMORY_QUEUE': 'scrapy.squeues.FifoMemoryQueue' if data['search_type']=='BFS' else 'scrapy.squeues.LifoMemoryQueue',
         'CONCURRENT_REQUESTS': data['concurrent'],  
         'CONCURRENT_REQUESTS_PER_DOMAIN': data['concurrent'],
         'CONCURRENT_REQUESTS_PER_IP': data['concurrent'],
         'REDIRECT_ENABLED': data.get('redirects') == 'on'
+        
     }
 
 
