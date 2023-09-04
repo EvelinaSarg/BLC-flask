@@ -39,7 +39,7 @@ def startJob():
     job_args = {
         'url': data['url'],
         'check_images': data['images']=='on',
-        'check_fragments': data['fragments']=='on',
+        'check_fragments': data.get('fragments')=='on',
         'report_path': f'{generate_random_string(10)}',
         'email': data['email']
     }
